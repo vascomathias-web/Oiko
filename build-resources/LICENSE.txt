@@ -1,0 +1,25 @@
+GestImmo - Logiciel de comptabilité immobilière
+Copyright © 2026 Marwane
+
+Tous droits réservés.
+
+En installant ce logiciel, vous acceptez les conditions suivantes :
+
+1. UTILISATION
+GestImmo est un logiciel de gestion comptable destiné aux bailleurs particuliers et professionnels. Toutes les données saisies sont stockées localement sur votre ordinateur.
+
+2. RESPONSABILITÉ
+L'éditeur ne peut être tenu responsable des erreurs de calcul, oublis ou pertes de données. Il est de la responsabilité de l'utilisateur de réaliser des sauvegardes régulières.
+
+3. DONNÉES PERSONNELLES
+Aucune donnée n'est transmise sur internet, à l'exception :
+- Des appels à l'API Google Gemini (uniquement si activé)
+- Des emails envoyés via votre propre serveur SMTP
+
+4. MISES À JOUR
+Le logiciel peut être mis à jour à tout moment pour améliorer ses fonctionnalités ou corriger des bugs.
+
+5. DÉSINSTALLATION
+Vos données sont conservées dans %APPDATA%\gestimmo\ même après désinstallation. Pour les supprimer, supprimez manuellement ce dossier.
+
+Bon usage de GestImmo !

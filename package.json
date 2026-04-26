@@ -1,0 +1,125 @@
+{
+  "name": "gestimmo",
+  "version": "1.8.4",
+  "description": "Logiciel de comptabilité et gestion immobilière assisté par IA",
+  "main": "electron/main.js",
+  "author": "Marwane",
+  "license": "MIT",
+  "homepage": "./",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "electron": "electron .",
+    "build": "npm run react-build && electron-builder",
+    "build-win": "npm run react-build && electron-builder --win",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "npm run react-build && electron-builder --dir"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "archiver": "^7.0.1",
+    "archiver-utils": "^5.0.2",
+    "better-sqlite3": "^12.2.0",
+    "exceljs": "^4.4.0",
+    "extract-zip": "^2.0.1",
+    "lucide-react": "^0.446.0",
+    "nodemailer": "^6.9.15",
+    "pdf-parse": "^1.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "react-pdf": "^10.4.1",
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.12.7"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version"
+    ]
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.gestimmo.app",
+    "productName": "GestImmo",
+    "extraMetadata": {
+      "main": "electron/main.js"
+    },
+    "copyright": "Copyright © 2026 Marwane",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build-resources"
+    },
+    "files": [
+      "build/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "public/guide_utilisation.pdf",
+        "to": "guide_utilisation.pdf"
+      },
+      {
+        "from": "public/tray-icon.png",
+        "to": "tray-icon.png"
+      },
+      {
+        "from": "public/pdf.worker.min.mjs",
+        "to": "pdf.worker.min.mjs"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build-resources/icon.ico",
+      "publisherName": "Marwane",
+      "verifyUpdateCodeSignature": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "GestImmo",
+      "installerIcon": "build-resources/icon.ico",
+      "uninstallerIcon": "build-resources/icon.ico",
+      "installerHeaderIcon": "build-resources/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "license": "build-resources/LICENSE.txt"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "**/*.node",
+      "node_modules/better-sqlite3/**/*",
+      "node_modules/archiver/**/*",
+      "node_modules/archiver-utils/**/*",
+      "node_modules/bindings/**/*",
+      "node_modules/node-gyp-build/**/*",
+      "node_modules/exceljs/**/*"
+    ]
+  }
+}

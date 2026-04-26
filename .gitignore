@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+.env
+.DS_Store
+*.log
+npm-debug.log*
+.idea/
+.vscode/
+*.db
+*.db-journal
+*.db-wal
