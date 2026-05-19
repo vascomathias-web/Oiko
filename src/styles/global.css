@@ -89,6 +89,17 @@
   padding: 0;
 }
 
+/* Transition fluide uniquement pendant le changement de thème */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 280ms ease,
+    border-color 280ms ease,
+    color 280ms ease,
+    box-shadow 280ms ease !important;
+}
+
 html,
 body {
   height: 100%;
@@ -104,6 +115,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+}
+
+/* Placeholder adapté au thème */
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
 }
 
 #root {
@@ -319,28 +336,32 @@ select {
   gap: 12px;
 }
 
+/* Legacy fallback — new buttons are fully inline-styled */
 .header-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: all 180ms ease;
   position: relative;
+  cursor: pointer;
 }
 
 .header-btn:hover {
-  background: var(--bg-card-hover);
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
   color: var(--text-primary);
 }
 
 .header-btn-badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 3px;
+  right: 3px;
   width: 8px;
   height: 8px;
   background: var(--accent-red);
@@ -349,18 +370,23 @@ select {
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--gradient-purple);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 800;
+  font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  transition: box-shadow 200ms ease;
+}
+
+.user-avatar:hover {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 /* ============================================
@@ -1122,6 +1148,22 @@ select {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+
+/* Header icon animations */
+@keyframes spin-once {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spin-once {
+  animation: spin-once 550ms cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(239,68,68,0);    }
+  40%       { transform: scale(1.15); box-shadow: 0 0 0 4px rgba(239,68,68,0.2); }
+  70%       { transform: scale(1);    box-shadow: 0 0 0 0 rgba(239,68,68,0);    }
 }
 
 /* ============================================

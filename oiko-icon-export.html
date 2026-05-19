@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>OIKO — Export Icône PNG</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 32px; font-family: Arial, sans-serif; color: white; }
+  canvas { border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  button {
+    background: #107C41; color: white; border: none;
+    padding: 14px 32px; border-radius: 10px; font-size: 15px;
+    font-weight: 700; cursor: pointer; letter-spacing: 0.05em;
+  }
+  button:hover { background: #0d6535; }
+  .note { font-size: 12px; opacity: 0.4; text-align: center; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div style="font-size:11px;opacity:0.4;letter-spacing:0.15em;text-transform:uppercase;">Icône OIKO — 256 × 256</div>
+
+<canvas id="c" width="256" height="256"></canvas>
+
+<button onclick="download()">⬇ Télécharger icon.png</button>
+
+<p class="note">
+  Étape 1 : Télécharge ce fichier PNG<br>
+  Étape 2 : Va sur <strong>cloudconvert.com</strong> → convertis PNG en ICO<br>
+  Étape 3 : Renomme le fichier <strong>icon.ico</strong> et place-le dans <strong>build-resources\</strong>
+</p>
+
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+
+// Fond dégradé bleu
+const grad = ctx.createLinearGradient(0, 0, 256, 256);
+grad.addColorStop(0, '#1e3a8a');
+grad.addColorStop(1, '#1e40af');
+
+// Fond arrondi
+ctx.beginPath();
+const r = 52;
+ctx.moveTo(r, 0);
+ctx.lineTo(256 - r, 0);
+ctx.quadraticCurveTo(256, 0, 256, r);
+ctx.lineTo(256, 256 - r);
+ctx.quadraticCurveTo(256, 256, 256 - r, 256);
+ctx.lineTo(r, 256);
+ctx.quadraticCurveTo(0, 256, 0, 256 - r);
+ctx.lineTo(0, r);
+ctx.quadraticCurveTo(0, 0, r, 0);
+ctx.closePath();
+ctx.fillStyle = grad;
+ctx.fill();
+
+// Fonction pour dessiner une ligne épaisse avec caps ronds
+function line(x1, y1, x2, y2, color, width) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+
+// Fonction pour dessiner une courbe de bézier
+function curve(x1, y1, cx, cy, x2, y2, color, width) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.quadraticCurveTo(cx, cy, x2, y2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+
+const sw = 22; // stroke width
+const white = '#FFFFFF';
+const green = '#4ade80';
+
+// K — barre verticale (blanc)
+line(88, 52, 88, 204, white, sw);
+
+// K — bras supérieur (blanc)
+line(88, 128, 178, 52, white, sw);
+
+// K — jambe inférieure courbée (vert)
+ctx.beginPath();
+ctx.moveTo(88, 128);
+ctx.bezierCurveTo(118, 158, 152, 182, 182, 200);
+ctx.strokeStyle = green;
+ctx.lineWidth = sw;
+ctx.lineCap = 'round';
+ctx.stroke();
+
+function download() {
+  const a = document.createElement('a');
+  a.download = 'icon.png';
+  a.href = c.toDataURL('image/png');
+  a.click();
+}
+</script>
+</body>
+</html>

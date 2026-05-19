@@ -2,21 +2,38 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Bell, RefreshCw, Settings, Info, X, Copy, Check, LogOut,
   BookOpen, Download, ExternalLink, FileText, ChevronLeft, ChevronRight,
-  ZoomIn, ZoomOut, AlertCircle
+  ZoomIn, ZoomOut, AlertCircle, ChevronDown, Sun, Moon
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import Modal from './Modal';
 
 export default function PageHeader({ title, subtitle, onRefresh, actions, onNavigate }) {
-  const { notifications, parametres } = useApp();
+  const { notifications, parametres, theme, updateTheme } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const menuRef = useRef(null);
 
+  // Hover / interaction states for header icons
+  const [refreshHov, setRefreshHov]   = useState(false);
+  const [refreshSpin, setRefreshSpin] = useState(false);
+  const [themeHov, setThemeHov]       = useState(false);
+  const [bellHov, setBellHov]         = useState(false);
+  const [avatarHov, setAvatarHov]     = useState(false);
+
+  const isLight = theme === 'light';
+  const toggleTheme = () => updateTheme(isLight ? 'dark' : 'light');
+
   const unreadCount = notifications.filter(n => !n.lu).length;
   const userName = parametres.user_name || 'Utilisateur';
   const userInitial = userName.trim().charAt(0).toUpperCase() || 'U';
+
+  const handleRefreshClick = () => {
+    if (refreshSpin) return;
+    setRefreshSpin(true);
+    setTimeout(() => setRefreshSpin(false), 550);
+    onRefresh?.();
+  };
 
   // Ferme le menu au clic à l'extérieur
   useEffect(() => {
@@ -54,34 +71,166 @@ export default function PageHeader({ title, subtitle, onRefresh, actions, onNavi
 
         <div className="header-actions">
           {actions}
-          {onRefresh && (
-            <button className="header-btn" onClick={onRefresh} title="Actualiser">
-              <RefreshCw size={18} />
-            </button>
-          )}
+
+          {/* ── Toggle Thème ── */}
           <button
-            className="header-btn"
-            title="Notifications"
-            onClick={() => window.__gestimmo_navigate?.('notifications')}
+            onClick={toggleTheme}
+            onMouseEnter={() => setThemeHov(true)}
+            onMouseLeave={() => setThemeHov(false)}
+            title={isLight ? 'Passer en mode sombre' : 'Passer en mode clair'}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 9,
+              border: `1px solid ${themeHov ? 'var(--border-color)' : 'transparent'}`,
+              background: themeHov ? 'var(--bg-tertiary)' : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 180ms ease',
+              position: 'relative', flexShrink: 0,
+            }}
           >
-            <Bell size={18} />
-            {unreadCount > 0 && <span className="header-btn-badge" />}
+            {isLight
+              ? <Moon size={15} style={{ color: themeHov ? '#6366f1' : 'var(--text-muted)', transition: 'color 180ms ease' }} />
+              : <Sun  size={15} style={{ color: themeHov ? '#f59e0b' : 'var(--text-muted)', transition: 'color 180ms ease' }} />
+            }
           </button>
 
-          {/* Menu utilisateur */}
+          {/* ── Bouton Actualiser ── */}
+          {onRefresh && (
+            <button
+              onClick={handleRefreshClick}
+              onMouseEnter={() => setRefreshHov(true)}
+              onMouseLeave={() => setRefreshHov(false)}
+              title="Actualiser"
+              style={{
+                width: 36, height: 36,
+                borderRadius: 9,
+                border: `1px solid ${refreshHov ? 'var(--border-color)' : 'transparent'}`,
+                background: refreshHov ? 'var(--bg-tertiary)' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 180ms ease',
+                position: 'relative', flexShrink: 0,
+              }}
+            >
+              <RefreshCw
+                size={15}
+                className={refreshSpin ? 'spin-once' : ''}
+                style={{
+                  color: refreshHov ? 'var(--accent-blue)' : 'var(--text-muted)',
+                  transition: 'color 180ms ease',
+                }}
+              />
+            </button>
+          )}
+
+          {/* ── Bouton Notifications ── */}
+          <button
+            onClick={() => window.__gestimmo_navigate?.('notifications')}
+            onMouseEnter={() => setBellHov(true)}
+            onMouseLeave={() => setBellHov(false)}
+            title={
+              unreadCount > 0
+                ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}`
+                : 'Notifications'
+            }
+            style={{
+              width: 36, height: 36,
+              borderRadius: 9,
+              border: `1px solid ${bellHov ? 'var(--border-color)' : 'transparent'}`,
+              background: bellHov ? 'var(--bg-tertiary)' : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 180ms ease',
+              position: 'relative', flexShrink: 0,
+            }}
+          >
+            <Bell
+              size={15}
+              style={{
+                color: unreadCount > 0
+                  ? (bellHov ? '#ef4444' : 'var(--text-secondary)')
+                  : (bellHov ? 'var(--text-primary)' : 'var(--text-muted)'),
+                transition: 'color 180ms ease',
+              }}
+            />
+            {unreadCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: 3, right: 3,
+                minWidth: unreadCount > 9 ? 18 : 15,
+                height: 15,
+                background: '#ef4444',
+                color: 'white',
+                fontSize: 9,
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '-0.02em',
+                borderRadius: 8,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '2px solid var(--bg-secondary)',
+                padding: unreadCount > 9 ? '0 3px' : 0,
+                animation: 'badge-pulse 2.4s ease-in-out infinite',
+              }}>
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {/* ── Avatar utilisateur ── */}
           <div ref={menuRef} style={{ position: 'relative' }}>
-            <div
-              className="user-avatar"
+            <button
               title={userName}
               onClick={() => setMenuOpen(!menuOpen)}
+              onMouseEnter={() => setAvatarHov(true)}
+              onMouseLeave={() => setAvatarHov(false)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 5,
+                padding: '0 8px 0 4px',
+                height: 36,
+                borderRadius: 18,
+                background: avatarHov || menuOpen
+                  ? 'var(--bg-tertiary)'
+                  : 'transparent',
+                border: `1px solid ${avatarHov || menuOpen ? 'var(--border-color)' : 'transparent'}`,
+                cursor: 'pointer',
+                transition: 'all 200ms ease',
+                flexShrink: 0,
+              }}
             >
-              {userInitial}
-            </div>
+              {/* Cercle initial */}
+              <div style={{
+                width: 28, height: 28,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white',
+                fontWeight: 800,
+                fontSize: 12,
+                letterSpacing: '-0.02em',
+                boxShadow: avatarHov || menuOpen
+                  ? '0 0 0 3px rgba(139,92,246,0.2), 0 2px 8px rgba(139,92,246,0.35)'
+                  : '0 2px 6px rgba(139,92,246,0.25)',
+                transition: 'box-shadow 200ms ease',
+                flexShrink: 0,
+              }}>
+                {userInitial}
+              </div>
+              {/* Chevron */}
+              <ChevronDown
+                size={12}
+                style={{
+                  color: avatarHov || menuOpen ? 'var(--text-secondary)' : 'var(--text-muted)',
+                  transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 220ms ease, color 180ms ease',
+                }}
+              />
+            </button>
 
             {menuOpen && (
               <div style={{
                 position: 'absolute',
-                top: 'calc(100% + 10px)',
+                top: 'calc(100% + 8px)',
                 right: 0,
                 width: 240,
                 background: 'var(--bg-card)',
@@ -190,7 +339,7 @@ function AboutModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="À propos de GestImmo">
+    <Modal isOpen={isOpen} onClose={onClose} title="À propos de Oïko">
       {/* Logo + nom */}
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -204,10 +353,10 @@ function AboutModal({ isOpen, onClose }) {
           fontSize: 28, fontWeight: 800, color: 'white',
           letterSpacing: '-0.05em'
         }}>
-          G
+          Oï
         </div>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.02em' }}>GestImmo</div>
+          <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.02em' }}>Oïko</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
             Comptabilité immobilière assistée par IA
           </div>

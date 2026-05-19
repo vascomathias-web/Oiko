@@ -1,7 +1,7 @@
 {
-  "name": "gestimmo",
+  "name": "oiko",
   "version": "1.8.4",
-  "description": "Logiciel de comptabilité et gestion immobilière assisté par IA",
+  "description": "Votre actif, en clair. — Logiciel de gestion immobilière",
   "main": "electron/main.js",
   "author": "Marwane",
   "license": "MIT",
@@ -17,13 +17,15 @@
     "build": "npm run react-build && electron-builder",
     "build-win": "npm run react-build && electron-builder --win",
     "postinstall": "electron-builder install-app-deps",
-    "pack": "npm run react-build && electron-builder --dir"
+    "pack": "npm run react-build && electron-builder --dir",
+    "generate-guide": "electron scripts/generate-guide.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
     "archiver": "^7.0.1",
     "archiver-utils": "^5.0.2",
     "better-sqlite3": "^12.2.0",
+    "electron-updater": "^6.8.3",
     "exceljs": "^4.4.0",
     "extract-zip": "^2.0.1",
     "lucide-react": "^0.446.0",
@@ -38,9 +40,11 @@
     "recharts": "^2.12.7"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "concurrently": "^9.0.1",
     "electron": "^33.0.0",
     "electron-builder": "^25.1.8",
+    "png-to-ico": "^3.0.1",
     "wait-on": "^8.0.1"
   },
   "browserslist": {
@@ -56,8 +60,8 @@
   },
   "build": {
     "extends": null,
-    "appId": "com.gestimmo.app",
-    "productName": "GestImmo",
+    "appId": "com.oiko.app",
+    "productName": "Oïko",
     "extraMetadata": {
       "main": "electron/main.js"
     },
@@ -85,6 +89,11 @@
         "to": "pdf.worker.min.mjs"
       }
     ],
+    "publish": {
+      "provider": "github",
+      "owner": "vascomathias-web",
+      "repo": "oiko"
+    },
     "win": {
       "target": [
         {
@@ -104,7 +113,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "GestImmo",
+      "shortcutName": "Oïko",
       "installerIcon": "build-resources/icon.ico",
       "uninstallerIcon": "build-resources/icon.ico",
       "installerHeaderIcon": "build-resources/icon.ico",

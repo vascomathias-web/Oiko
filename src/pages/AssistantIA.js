@@ -5,15 +5,15 @@ import { useConfirm } from '../components/ConfirmDialog';
 import ReactMarkdown from 'react-markdown';
 import {
   Send, Bot, User, Sparkles, Trash2, AlertCircle,
-  Plus, MessageSquare, Edit3, Search, X, Check
+  Plus, MessageSquare, Edit3, Search, X, Check, Database
 } from 'lucide-react';
 
 const SUGGESTIONS = [
-  "Comment déclarer mes revenus locatifs ?",
+  "Combien de loyers sont en retard ce mois-ci ?",
+  "Quel est le revenu net de mon portfolio cette année ?",
+  "Quels travaux sont actuellement en cours ?",
+  "Comment déclarer mes revenus locatifs (formulaire 2044) ?",
   "Quelle est la différence entre LMNP et LMP ?",
-  "Comment importer une facture dans le logiciel ?",
-  "Qu'est-ce que la CRL ?",
-  "Comment générer un fichier Excel mensuel ?",
   "Comment calculer mon taux de rentabilité ?"
 ];
 
@@ -160,11 +160,22 @@ export default function AssistantIA() {
         title="Assistant IA"
         subtitle="Gemini • Comptabilité et fonctionnement du logiciel"
         actions={
-          conversations.length > 0 && (
-            <button className="btn btn-ghost" onClick={handleClearAll}>
-              <Trash2 size={14} /> Tout effacer
-            </button>
-          )
+          <>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '5px 12px', borderRadius: 'var(--radius-full)',
+              background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)',
+              fontSize: 12, color: '#10b981', fontWeight: 600
+            }}>
+              <Database size={12} />
+              Données connectées
+            </div>
+            {conversations.length > 0 && (
+              <button className="btn btn-ghost" onClick={handleClearAll}>
+                <Trash2 size={14} /> Tout effacer
+              </button>
+            )}
+          </>
         }
       />
 
@@ -285,7 +296,8 @@ export default function AssistantIA() {
                     {activeConvId ? 'Conversation vide' : 'Nouvelle conversation'}
                   </h3>
                   <p style={{ color: 'var(--text-muted)', fontSize: 14, maxWidth: 480 }}>
-                    Posez vos questions sur la comptabilité immobilière, la fiscalité, ou le fonctionnement du logiciel.
+                    Posez vos questions sur la comptabilité immobilière, la fiscalité, ou votre portfolio.
+                    L'IA a accès à vos données réelles (biens, loyers, travaux).
                   </p>
                 </div>
               )}

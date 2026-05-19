@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>OIKO — Aperçu Icône</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1e293b; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 40px; font-family: Arial, sans-serif; color: white; }
+  .row { display: flex; align-items: flex-end; gap: 32px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .label { font-size: 11px; opacity: 0.5; letter-spacing: 0.1em; text-transform: uppercase; }
+  .note { font-size: 12px; opacity: 0.4; margin-top: 8px; text-align: center; max-width: 400px; line-height: 1.6; }
+
+  /* L'icône SVG à copier/exporter */
+  #main-icon { display: none; }
+</style>
+</head>
+<body>
+
+<div style="font-size:13px;opacity:0.5;letter-spacing:0.15em;text-transform:uppercase;">Aperçu icône — OIKO</div>
+
+<!-- Différentes tailles -->
+<div class="row">
+
+  <!-- 256x256 -->
+  <div class="item">
+    <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" id="main-icon">
+      <!-- Fond arrondi bleu profond -->
+      <rect width="256" height="256" rx="52" fill="url(#bgGrad)"/>
+      <defs>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="256" y2="256">
+          <stop offset="0%" stop-color="#1e3a8a"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+      </defs>
+      <!-- K — barre verticale (blanc) -->
+      <line x1="88" y1="52" x2="88" y2="204" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <!-- K — bras supérieur (blanc) -->
+      <line x1="88" y1="128" x2="178" y2="52" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <!-- K — jambe inférieure courbée (vert émeraude) -->
+      <path d="M88,128 C118,158 152,182 182,200" stroke="#4ade80" stroke-width="26" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="label">256 × 256</span>
+  </div>
+
+  <!-- 64x64 -->
+  <div class="item">
+    <svg width="64" height="64" viewBox="0 0 256 256" fill="none">
+      <rect width="256" height="256" rx="52" fill="url(#bgGrad2)"/>
+      <defs>
+        <linearGradient id="bgGrad2" x1="0" y1="0" x2="256" y2="256">
+          <stop offset="0%" stop-color="#1e3a8a"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+      </defs>
+      <line x1="88" y1="52" x2="88" y2="204" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <line x1="88" y1="128" x2="178" y2="52" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <path d="M88,128 C118,158 152,182 182,200" stroke="#4ade80" stroke-width="26" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="label">64 × 64</span>
+  </div>
+
+  <!-- 32x32 -->
+  <div class="item">
+    <svg width="32" height="32" viewBox="0 0 256 256" fill="none">
+      <rect width="256" height="256" rx="52" fill="url(#bgGrad3)"/>
+      <defs>
+        <linearGradient id="bgGrad3" x1="0" y1="0" x2="256" y2="256">
+          <stop offset="0%" stop-color="#1e3a8a"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+      </defs>
+      <line x1="88" y1="52" x2="88" y2="204" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <line x1="88" y1="128" x2="178" y2="52" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <path d="M88,128 C118,158 152,182 182,200" stroke="#4ade80" stroke-width="26" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="label">32 × 32</span>
+  </div>
+
+  <!-- 16x16 -->
+  <div class="item">
+    <svg width="16" height="16" viewBox="0 0 256 256" fill="none">
+      <rect width="256" height="256" rx="52" fill="url(#bgGrad4)"/>
+      <defs>
+        <linearGradient id="bgGrad4" x1="0" y1="0" x2="256" y2="256">
+          <stop offset="0%" stop-color="#1e3a8a"/>
+          <stop offset="100%" stop-color="#1e40af"/>
+        </linearGradient>
+      </defs>
+      <line x1="88" y1="52" x2="88" y2="204" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <line x1="88" y1="128" x2="178" y2="52" stroke="white" stroke-width="26" stroke-linecap="round"/>
+      <path d="M88,128 C118,158 152,182 182,200" stroke="#4ade80" stroke-width="26" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="label">16 × 16</span>
+  </div>
+
+</div>
+
+<p class="note">
+  ✅ Si ce design te convient, dis-le moi.<br>
+  Je génèrerai le fichier PNG 256×256 que tu convertiras en .ico<br>
+  sur <strong>cloudconvert.com</strong> (gratuit, PNG → ICO en 10 secondes).
+</p>
+
+</body>
+</html>

@@ -70,7 +70,7 @@ export default function WelcomeModal({ onClose }) {
     addNotification({
       type: 'success',
       titre: 'Configuration terminée',
-      message: `Bienvenue ${data.user_name || 'dans GestImmo'} ! Tout est prêt.`
+      message: `Bienvenue ${data.user_name || 'dans Oïko'} ! Tout est prêt.`
     });
 
     onClose();
@@ -184,7 +184,7 @@ export default function WelcomeModal({ onClose }) {
         }}>
           <Sparkles size={18} />
           <div style={{ fontSize: 13, fontWeight: 700, flex: 1 }}>
-            Configuration GestImmo
+            Configuration Oïko
           </div>
           <div style={{ fontSize: 11, opacity: 0.85, fontWeight: 600 }}>
             Étape {step + 1} / {slides.length}
@@ -293,7 +293,7 @@ export default function WelcomeModal({ onClose }) {
             }
           >
             {isLast
-              ? <><Check size={14} /> Commencer à utiliser GestImmo</>
+              ? <><Check size={14} /> Commencer à utiliser Oïko</>
               : <>Suivant <ArrowRight size={14} /></>
             }
           </button>
@@ -322,7 +322,7 @@ function WelcomeSlide() {
         fontSize: 26, fontWeight: 800,
         marginBottom: 10, letterSpacing: '-0.02em'
       }}>
-        Bienvenue dans GestImmo !
+        Bienvenue dans Oïko !
       </h2>
       <p style={{
         fontSize: 14, color: 'var(--text-secondary)',
@@ -589,7 +589,7 @@ function BackupSlide({ data, updateData }) {
         border: '1px solid rgba(239, 68, 68, 0.2)',
         borderRadius: 8, fontSize: 12, lineHeight: 1.5
       }}>
-        ⚠️ <strong>Cette étape est obligatoire.</strong> GestImmo stocke des données financières importantes (loyers, factures, locataires). Un choix conscient protège vos informations.
+        ⚠️ <strong>Cette étape est obligatoire.</strong> Oïko stocke des données financières importantes (loyers, factures, locataires). Un choix conscient protège vos informations.
       </div>
 
       {/* 2 grandes cards de choix */}
@@ -668,7 +668,7 @@ function BackupSlide({ data, updateData }) {
               className="form-input"
               value={data.backup_folder}
               onChange={(e) => updateData('backup_folder', e.target.value)}
-              placeholder="C:\Users\...\Backups\GestImmo"
+              placeholder="C:\Users\...\Backups\Oiko"
               style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 12 }}
             />
             <button
@@ -802,7 +802,7 @@ function FinishSlide({ data }) {
         marginBottom: 22, maxWidth: 440, margin: '0 auto 22px'
       }}>
         {filledCount === checks.length
-          ? 'Tout est configuré, vous êtes prêt à utiliser GestImmo à 100% !'
+          ? 'Tout est configuré, vous êtes prêt à utiliser Oïko à 100% !'
           : `${filledCount} / ${checks.length} étapes configurées. Vous pourrez compléter le reste plus tard dans les Paramètres.`}
       </p>
 

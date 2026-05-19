@@ -32,6 +32,10 @@ export function AppProvider({ children }) {
   }, [loadParametres, loadNotifications]);
 
   const updateTheme = async (newTheme) => {
+    // Active la transition fluide le temps du switch
+    document.documentElement.classList.add('theme-switching');
+    setTimeout(() => document.documentElement.classList.remove('theme-switching'), 350);
+
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
     await window.api.parametres.set('theme', newTheme);

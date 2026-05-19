@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { useConfirm } from '../components/ConfirmDialog';
 import {
   Bell, Info, AlertTriangle, AlertCircle, CheckCircle2,
-  Trash2, Check
+  Trash2, Check, Zap, ArrowRight
 } from 'lucide-react';
 
 const ICONS = {
@@ -14,9 +14,22 @@ const ICONS = {
   success: { icon: CheckCircle2, cls: 'success' }
 };
 
-export default function Notifications() {
-  const { notifications, loadNotifications } = useApp();
-  const [filter, setFilter] = useState('all');
+// Mots-clés → page de navigation
+function getActionPage(notif) {
+  const t = (notif.titre + ' ' + (notif.message || '')).toLowerCase();
+  if (t.includes('loyer') || t.includes('impayé') || t.includes('retard')) return 'loyer';
+  if (t.includes('bail') || t.includes('locataire') || t.includes('bien')) return 'biens';
+  if (t.includes('document') || t.includes('expir')) return 'biens';
+  if (t.includes('backup') || t.includes('sauvegarde')) return 'parametres';
+  return null;
+}
+
+const PAGE_LABELS = { loyer: 'Voir Loyers', biens: 'Voir Biens', parametres: 'Paramètres' };
+
+export default function Notifications({ onNavigate }) {
+  const { notifications, loadNotifications, addNotification } = useApp();
+  const [filter, setFilter]     = useState('all');
+  const [checking, setChecking] = useState(false);
   const { confirm } = useConfirm();
 
   useEffect(() => { loadNotifications(); }, [loadNotifications]);
@@ -67,6 +80,15 @@ export default function Notifications() {
         onRefresh={loadNotifications}
         actions={
           <>
+            <button className="btn btn-ghost btn-sm" onClick={async () => {
+              setChecking(true);
+              const res = await window.api.alertes.checkAll();
+              setChecking(false);
+              await loadNotifications();
+              addNotification({ type: res?.generated > 0 ? 'warning' : 'success', titre: 'Alertes vérifiées', message: res?.generated > 0 ? `${res.generated} nouvelle(s) alerte(s)` : 'Aucune nouvelle alerte' });
+            }} disabled={checking}>
+              {checking ? <><div className="spinner" style={{ width: 13, height: 13 }} /> Vérification…</> : <><Zap size={13} /> Vérifier alertes</>}
+            </button>
             {counts.unread > 0 && (
               <button className="btn btn-secondary" onClick={handleMarkAllRead}>
                 <Check size={14} /> Tout marquer lu
@@ -113,19 +135,28 @@ export default function Notifications() {
               const meta = ICONS[n.type] || ICONS.info;
               const Icon = meta.icon;
               return (
-                <div key={n.id} className={`notif-item ${!n.lu ? 'unread' : ''}`}>
+                <div key={n.id} className={`notif-item ${!n.lu ? 'unread' : ''}`} onClick={() => !n.lu && handleMarkRead(n.id)} style={{ cursor: !n.lu ? 'pointer' : 'default' }}>
                   <div className={`notif-icon ${meta.cls}`}>
                     <Icon size={18} />
                   </div>
                   <div className="notif-content">
                     <div className="notif-title">{n.titre}</div>
                     {n.message && <div className="notif-message">{n.message}</div>}
-                    <div className="notif-time">
-                      {formatRelative(n.created_at)}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+                      <div className="notif-time">{formatRelative(n.created_at)}</div>
+                      {onNavigate && getActionPage(n) && (
+                        <button
+                          className="btn btn-ghost btn-sm"
+                          style={{ fontSize: 11, padding: '2px 8px', height: 'auto' }}
+                          onClick={(e) => { e.stopPropagation(); onNavigate(getActionPage(n)); }}
+                        >
+                          {PAGE_LABELS[getActionPage(n)]} <ArrowRight size={11} />
+                        </button>
+                      )}
                     </div>
                   </div>
                   {!n.lu && (
-                    <button className="btn btn-ghost btn-sm" onClick={() => handleMarkRead(n.id)}>
+                    <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); handleMarkRead(n.id); }} title="Marquer comme lu">
                       <Check size={13} />
                     </button>
                   )}

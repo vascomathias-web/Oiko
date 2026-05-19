@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>OIKO — Aperçu Logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #F5F5F7; }
+  .scene {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    background: #ddd;
+  }
+  .panel {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px; padding: 60px;
+    position: relative;
+  }
+  .label {
+    position: absolute; top: 14px; left: 18px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.45;
+  }
+  .bg-light   { background: radial-gradient(ellipse at center, #ffffff 0%, #efefef 100%); }
+  .bg-dark    { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+  .bg-sidebar { background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%); }
+  .bg-white   { background: #ffffff; }
+
+  .slogan { font-size: 12px; font-weight: 300; letter-spacing: 0.24em; text-transform: uppercase; }
+  .s-dark  { color: #64748b; }
+  .s-light { color: rgba(255,255,255,0.45); }
+</style>
+</head>
+<body>
+<div class="scene">
+
+  <!-- Fond clair -->
+  <div class="panel bg-light">
+    <span class="label s-dark">Fond clair / Impression</span>
+    <svg width="380" height="160" viewBox="0 0 420 175" fill="none">
+      <circle cx="80"  cy="88" r="44" stroke="#33363B" stroke-width="21" fill="none"/>
+      <line x1="163" y1="44" x2="163" y2="132" stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="44" x2="185" y2="132" stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="88" x2="237" y2="44"  stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <path d="M185,88 C205,108 238,128 265,134" stroke="#107C41" stroke-width="21" stroke-linecap="round" fill="none"/>
+      <circle cx="305" cy="88" r="44" stroke="#33363B" stroke-width="21" fill="none"/>
+    </svg>
+    <p class="slogan s-dark">Votre actif, en clair.</p>
+  </div>
+
+  <!-- Fond blanc pur -->
+  <div class="panel bg-white">
+    <span class="label s-dark">Fond blanc pur</span>
+    <svg width="380" height="160" viewBox="0 0 420 175" fill="none">
+      <circle cx="80"  cy="88" r="44" stroke="#33363B" stroke-width="21" fill="none"/>
+      <line x1="163" y1="44" x2="163" y2="132" stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="44" x2="185" y2="132" stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="88" x2="237" y2="44"  stroke="#33363B" stroke-width="21" stroke-linecap="round"/>
+      <path d="M185,88 C205,108 238,128 265,134" stroke="#107C41" stroke-width="21" stroke-linecap="round" fill="none"/>
+      <circle cx="305" cy="88" r="44" stroke="#33363B" stroke-width="21" fill="none"/>
+    </svg>
+    <p class="slogan s-dark">Votre actif, en clair.</p>
+  </div>
+
+  <!-- Fond sombre app -->
+  <div class="panel bg-dark">
+    <span class="label s-light" style="color:white">Fond sombre / App</span>
+    <svg width="380" height="160" viewBox="0 0 420 175" fill="none">
+      <circle cx="80"  cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+      <line x1="163" y1="44" x2="163" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="44" x2="185" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+      <line x1="185" y1="88" x2="237" y2="44"  stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+      <path d="M185,88 C205,108 238,128 265,134" stroke="#4ade80" stroke-width="21" stroke-linecap="round" fill="none"/>
+      <circle cx="305" cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+    </svg>
+    <p class="slogan s-light">Votre actif, en clair.</p>
+  </div>
+
+  <!-- Sidebar mini (version approuvée) -->
+  <div class="panel bg-sidebar">
+    <span class="label" style="color:white;opacity:0.45">Sidebar app — taille réelle</span>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <svg width="120" height="50" viewBox="0 0 420 175" fill="none">
+        <circle cx="80"  cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+        <line x1="163" y1="44" x2="163" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <line x1="185" y1="44" x2="185" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <line x1="185" y1="88" x2="237" y2="44"  stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <path d="M185,88 C205,108 238,128 265,134" stroke="#4ade80" stroke-width="21" stroke-linecap="round" fill="none"/>
+        <circle cx="305" cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+      </svg>
+      <p style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);font-weight:300;">Votre actif, en clair.</p>
+    </div>
+    <div style="margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.6;">
+      <div style="font-size:10px;color:white;font-weight:600;letter-spacing:0.08em;">VERSION LOGO SEUL (sans slogan)</div>
+      <svg width="120" height="50" viewBox="0 0 420 175" fill="none">
+        <circle cx="80"  cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+        <line x1="163" y1="44" x2="163" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <line x1="185" y1="44" x2="185" y2="132" stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <line x1="185" y1="88" x2="237" y2="44"  stroke="#FFFFFF" stroke-width="21" stroke-linecap="round"/>
+        <path d="M185,88 C205,108 238,128 265,134" stroke="#4ade80" stroke-width="21" stroke-linecap="round" fill="none"/>
+        <circle cx="305" cy="88" r="44" stroke="#FFFFFF" stroke-width="21" fill="none"/>
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- Palette -->
+<div style="position:fixed;bottom:16px;right:16px;background:white;border-radius:12px;padding:12px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.12);font-size:12px;display:flex;gap:18px;align-items:center;">
+  <b style="color:#333">Palette Oïko</b>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#33363B;display:inline-block;"></span>#33363B — Anthracite</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#107C41;display:inline-block;"></span>#107C41 — Vert Émeraude</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#4ade80;display:inline-block;"></span>#4ade80 — Vert clair (sur fond sombre)</span>
+</div>
+</body>
+</html>

@@ -8,7 +8,7 @@ import {
   Moon, Sun, Mail, Volume2, Key, Save, Check, Eye, EyeOff,
   Settings as SettingsIcon, HardDrive, FolderOpen, Download,
   Upload, RotateCcw, Trash2, Clock, CheckCircle2, AlertCircle,
-  Cloud, ShieldAlert
+  Cloud, ShieldAlert, Bell, FileWarning, CalendarX, Zap
 } from 'lucide-react';
 
 export default function Parametres() {
@@ -46,7 +46,7 @@ export default function Parametres() {
 
   return (
     <>
-      <PageHeader title="Paramètres" subtitle="Configuration de GestImmo" />
+      <PageHeader title="Paramètres" subtitle="Configuration de Oïko" />
 
       <div className="page-container">
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
@@ -210,6 +210,9 @@ export default function Parametres() {
           {/* Sauvegarde / Backup */}
           <BackupSection />
 
+          {/* Alertes automatiques */}
+          <AlertesSection />
+
           {/* Zone dangereuse */}
           <div className="card mb-6" style={{
             border: '1px solid rgba(239, 68, 68, 0.25)',
@@ -259,7 +262,7 @@ export default function Parametres() {
                 <SettingsIcon size={22} color="white" />
               </div>
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>GestImmo</div>
+            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Oïko</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
               Version 1.0.0 • Comptabilité immobilière assistée par IA
             </div>
@@ -272,6 +275,140 @@ export default function Parametres() {
 
       <AdminZone isOpen={showAdminZone} onClose={() => setShowAdminZone(false)} />
     </>
+  );
+}
+
+function AlertesSection() {
+  const { parametres, updateParametre, addNotification } = useApp();
+  const [checking, setChecking] = useState(false);
+
+  const toggle = async (key) => {
+    const current = parametres[key] === 'true';
+    await updateParametre(key, current ? 'false' : 'true');
+  };
+
+  const setDelai = async (key, val) => {
+    await updateParametre(key, val);
+  };
+
+  const handleCheckNow = async () => {
+    setChecking(true);
+    const res = await window.api.alertes.checkAll();
+    setChecking(false);
+    if (res?.generated > 0) {
+      addNotification({ type: 'success', titre: 'Alertes vérifiées', message: `${res.generated} alerte(s) générée(s)` });
+    } else {
+      addNotification({ type: 'info', titre: 'Alertes vérifiées', message: 'Aucune nouvelle alerte à signaler' });
+    }
+  };
+
+  const alertes = [
+    {
+      key:      'alerte_loyer',
+      label:    'Loyers impayés',
+      desc:     'Notifier quand un loyer est en retard',
+      icon:     <Bell size={15} style={{ color: '#ef4444' }} />,
+      delayLabel: 'Délai après échéance (jours)',
+      color:    '#ef4444'
+    },
+    {
+      key:      'alerte_doc',
+      label:    'Documents expirant',
+      desc:     'Notifier quand un document locataire approche de sa date d\'expiration',
+      icon:     <FileWarning size={15} style={{ color: '#f59e0b' }} />,
+      delayLabel: 'Notifier X jours avant expiration',
+      color:    '#f59e0b'
+    },
+    {
+      key:      'alerte_bail',
+      label:    'Fin de bail',
+      desc:     'Notifier quand un bail arrive à son terme',
+      icon:     <CalendarX size={15} style={{ color: '#8b5cf6' }} />,
+      delayLabel: 'Notifier X jours avant la fin',
+      color:    '#8b5cf6'
+    }
+  ];
+
+  return (
+    <div className="card mb-6">
+      <div className="card-header">
+        <div className="card-title">
+          <div className="card-title-icon" style={{ background: 'linear-gradient(135deg,#f59e0b,#ef4444)' }}>
+            <Bell size={16} />
+          </div>
+          Alertes automatiques
+        </div>
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={handleCheckNow}
+          disabled={checking}
+          title="Vérifier maintenant toutes les alertes"
+        >
+          {checking
+            ? <><div className="spinner" style={{ width: 13, height: 13 }} /> Vérification…</>
+            : <><Zap size={13} /> Vérifier maintenant</>}
+        </button>
+      </div>
+
+      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16, lineHeight: 1.6 }}>
+        Ces alertes sont vérifiées automatiquement à chaque démarrage de l'application et alimentent votre centre de notifications.
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {alertes.map(a => {
+          const actif = parametres[`${a.key}_actif`] === 'true';
+          const delai = parametres[`${a.key}_delai`] || (a.key === 'alerte_bail' ? '60' : a.key === 'alerte_doc' ? '30' : '5');
+          return (
+            <div
+              key={a.key}
+              style={{
+                border: `1px solid ${actif ? a.color + '40' : 'var(--border-color)'}`,
+                borderRadius: 10,
+                background: actif ? `${a.color}08` : 'var(--bg-tertiary)',
+                padding: 14,
+                transition: 'all 0.2s'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: actif ? 12 : 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: `${a.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {a.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>{a.desc}</div>
+                  </div>
+                </div>
+                <div
+                  className={`toggle ${actif ? 'active' : ''}`}
+                  onClick={() => toggle(`${a.key}_actif`)}
+                  style={{ flexShrink: 0 }}
+                />
+              </div>
+
+              {actif && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 10, borderTop: `1px solid ${a.color}20` }}>
+                  <label style={{ fontSize: 12, color: 'var(--text-secondary)', flex: 1 }}>{a.delayLabel} :</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="365"
+                    value={delai}
+                    onChange={e => setDelai(`${a.key}_delai`, e.target.value)}
+                    style={{
+                      width: 70, padding: '5px 10px', borderRadius: 8, border: `1px solid ${a.color}40`,
+                      background: 'var(--bg-secondary)', color: 'var(--text-primary)',
+                      fontSize: 13, fontWeight: 600, textAlign: 'center', fontFamily: 'inherit'
+                    }}
+                  />
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>jour{parseInt(delai) > 1 ? 's' : ''}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

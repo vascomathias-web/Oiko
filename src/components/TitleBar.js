@@ -9,7 +9,7 @@ export default function TitleBar() {
           <div className="title-bar-logo">
             <Building size={14} />
           </div>
-          <div className="title-bar-title">GestImmo</div>
+          <div className="title-bar-title">Oïko</div>
           <div className="title-bar-subtitle">Comptabilité immobilière</div>
         </div>
       </div>

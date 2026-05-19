@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; font-size: 13px; line-height: 1.6; }
+
+  /* ── Page breaks ── */
+  .page { width: 210mm; min-height: 297mm; padding: 20mm 18mm; position: relative; page-break-after: always; display: flex; flex-direction: column; }
+  .page:last-child { page-break-after: avoid; }
+
+  /* ── Colors ── */
+  :root {
+    --blue: #1e40af;
+    --blue-light: #3b82f6;
+    --purple: #7c3aed;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --gray: #64748b;
+    --bg: #f8fafc;
+    --border: #e2e8f0;
+  }
+
+  /* ── Cover page ── */
+  .cover { background: linear-gradient(160deg, #1e3a8a 0%, #1e40af 55%, #7c3aed 100%); color: white; justify-content: space-between; align-items: flex-start; }
+  .cover-logo { width: 72px; height: 72px; border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: #1e40af; letter-spacing: -2px; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .cover-app { font-size: 46px; font-weight: 900; letter-spacing: -2px; margin-bottom: 6px; }
+  .cover-tagline { font-size: 16px; opacity: 0.75; font-weight: 400; margin-bottom: 40px; }
+  .cover-title-block { margin-top: auto; }
+  .cover-doc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; }
+  .cover-doc-title { font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; margin-bottom: 8px; }
+  .cover-doc-sub { font-size: 14px; opacity: 0.7; }
+  .cover-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; font-size: 11px; opacity: 0.55; }
+
+  /* ── TOC page ── */
+  .toc-header { font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: var(--gray); margin-bottom: 4px; }
+  .toc-title { font-size: 26px; font-weight: 800; color: var(--blue); margin-bottom: 32px; letter-spacing: -0.5px; }
+  .toc-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .toc-num { width: 28px; height: 28px; border-radius: 8px; background: var(--blue); color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .toc-num.purple { background: var(--purple); }
+  .toc-num.green { background: var(--green); }
+  .toc-num.orange { background: var(--orange); }
+  .toc-text { flex: 1; font-size: 13px; font-weight: 600; color: #1e293b; }
+  .toc-sub { font-size: 11px; color: var(--gray); font-weight: 400; }
+  .toc-page { font-size: 11px; color: var(--gray); font-weight: 600; }
+
+  /* ── Section pages ── */
+  .section-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .section-badge.blue { background: rgba(30,64,175,0.08); color: var(--blue); }
+  .section-badge.purple { background: rgba(124,58,237,0.08); color: var(--purple); }
+  .section-badge.green { background: rgba(16,185,129,0.08); color: var(--green); }
+  .section-badge.orange { background: rgba(245,158,11,0.08); color: var(--orange); }
+  .section-badge.red { background: rgba(239,68,68,0.08); color: var(--red); }
+
+  .page-title { font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .page-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 24px; line-height: 1.5; }
+
+  /* ── Content blocks ── */
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .card-title { font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .card-icon { width: 24px; height: 24px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .card-icon.blue { background: rgba(30,64,175,0.1); }
+  .card-icon.green { background: rgba(16,185,129,0.1); }
+  .card-icon.purple { background: rgba(124,58,237,0.1); }
+  .card-icon.orange { background: rgba(245,158,11,0.1); }
+
+  .step-list { list-style: none; }
+  .step-list li { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--blue); color: white; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-content { flex: 1; }
+  .step-content strong { font-size: 12px; font-weight: 700; display: block; margin-bottom: 2px; }
+  .step-content span { font-size: 11px; color: var(--gray); }
+
+  .tip-box { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 12px 14px; margin-top: 16px; }
+  .tip-box.green { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.2); }
+  .tip-box.orange { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); }
+  .tip-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blue-light); margin-bottom: 4px; }
+  .tip-label.green { color: var(--green); }
+  .tip-label.orange { color: var(--orange); }
+  .tip-text { font-size: 11.5px; color: #334155; line-height: 1.55; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+  .mini-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .mini-card-label { font-size: 10px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .mini-card-value { font-size: 12px; font-weight: 700; color: #0f172a; }
+  .mini-card-desc { font-size: 10.5px; color: var(--gray); margin-top: 4px; line-height: 1.4; }
+
+  .feature-list { list-style: none; }
+  .feature-list li { font-size: 11.5px; color: #334155; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list li::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+
+  .kbd { display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-family: monospace; font-weight: 600; color: #475569; }
+
+  /* ── Page footer ── */
+  .page-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #94a3b8; }
+  .page-footer-logo { font-weight: 800; color: var(--blue); font-size: 11px; letter-spacing: -0.5px; }
+
+  /* ── Status chips ── */
+  .chip { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .chip.green { background: rgba(16,185,129,0.12); color: #059669; }
+  .chip.red { background: rgba(239,68,68,0.12); color: #dc2626; }
+  .chip.orange { background: rgba(245,158,11,0.12); color: #d97706; }
+  .chip.blue { background: rgba(59,130,246,0.12); color: #2563eb; }
+  .chip.purple { background: rgba(124,58,237,0.12); color: #7c3aed; }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* ── Highlight block ── */
+  .highlight { background: linear-gradient(135deg, rgba(30,64,175,0.06), rgba(124,58,237,0.06)); border: 1px solid rgba(30,64,175,0.12); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .highlight-title { font-size: 12px; font-weight: 800; color: var(--blue); margin-bottom: 8px; }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .data-table th { background: var(--bg); font-weight: 700; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); color: var(--gray); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .data-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1 — COUVERTURE
+═══════════════════════════════════════════ -->
+<div class="page cover">
+  <div>
+    <div class="cover-logo">Oï</div>
+    <div class="cover-app">Oïko</div>
+    <div class="cover-tagline">Votre actif, en clair.</div>
+  </div>
+
+  <div class="cover-title-block">
+    <div class="cover-doc-label">Documentation officielle</div>
+    <div class="cover-doc-title">Guide<br>d'utilisation</div>
+    <div class="cover-doc-sub">Tout ce qu'il faut savoir pour bien démarrer</div>
+  </div>
+
+  <div class="cover-footer">
+    <span>Oïko — Gestion immobilière assistée par IA</span>
+    <span>Version 2.0 • 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 2 — SOMMAIRE
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="toc-header">Sommaire</div>
+  <div class="toc-title">Table des matières</div>
+
+  <div class="toc-item">
+    <div class="toc-num">1</div>
+    <div class="toc-text">Premiers pas <span class="toc-sub">— Installation et configuration initiale</span></div>
+    <div class="toc-page">p. 3</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">2</div>
+    <div class="toc-text">Tableau de bord <span class="toc-sub">— Vue d'ensemble de votre patrimoine</span></div>
+    <div class="toc-page">p. 4</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">3</div>
+    <div class="toc-text">Biens & Locataires <span class="toc-sub">— Gérer votre parc immobilier</span></div>
+    <div class="toc-page">p. 5</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">4</div>
+    <div class="toc-text">Loyers <span class="toc-sub">— Suivi des paiements et quittances</span></div>
+    <div class="toc-page">p. 6–7</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">5</div>
+    <div class="toc-text">Documents & Relevés <span class="toc-sub">— Classement et import bancaire CSV</span></div>
+    <div class="toc-page">p. 8–9</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">6</div>
+    <div class="toc-text">Travaux <span class="toc-sub">— Suivi des interventions et budgets</span></div>
+    <div class="toc-page">p. 10</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">7</div>
+    <div class="toc-text">Calendrier <span class="toc-sub">— Échéances et événements</span></div>
+    <div class="toc-page">p. 11</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num">8</div>
+    <div class="toc-text">Récapitulatif <span class="toc-sub">— Rapports et analyses fiscales</span></div>
+    <div class="toc-page">p. 12</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num purple">9</div>
+    <div class="toc-text">Assistant IA <span class="toc-sub">— Analyse intelligente de vos données</span></div>
+    <div class="toc-page">p. 13</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num green">10</div>
+    <div class="toc-text">Notifications & Alertes <span class="toc-sub">— Ne rien manquer d'important</span></div>
+    <div class="toc-page">p. 14</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num green">11</div>
+    <div class="toc-text">Paramètres & Email <span class="toc-sub">— Configuration SMTP et profil</span></div>
+    <div class="toc-page">p. 15</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num green">12</div>
+    <div class="toc-text">Sauvegarde & Restauration <span class="toc-sub">— Protéger vos données</span></div>
+    <div class="toc-page">p. 16</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num orange">13</div>
+    <div class="toc-text">Export & Comptabilité <span class="toc-sub">— Excel, fiscal 2044, comptable</span></div>
+    <div class="toc-page">p. 17</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num orange">14</div>
+    <div class="toc-text">Multi-dossiers <span class="toc-sub">— Gérer plusieurs patrimoines</span></div>
+    <div class="toc-page">p. 18</div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-num orange">15</div>
+    <div class="toc-text">Raccourcis & Astuces <span class="toc-sub">— Conseils pour aller plus vite</span></div>
+    <div class="toc-page">p. 19</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Guide d'utilisation v2.0</span>
+    <span>Page 2 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 3 — PREMIERS PAS
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Démarrage</div>
+  <div class="page-title">Premiers pas avec Oïko</div>
+  <div class="page-subtitle">Configurez votre espace en quelques minutes pour commencer à gérer votre patrimoine immobilier.</div>
+
+  <ul class="step-list">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>Renseignez votre profil propriétaire</strong>
+        <span>Dans Paramètres → Mon profil : entrez votre nom, email et les informations de votre SCI ou identité personnelle. Ces données apparaîtront sur les quittances et documents officiels.</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>Ajoutez votre premier bien immobilier</strong>
+        <span>Allez dans Biens & Locataires → bouton « + Nouveau bien ». Renseignez l'adresse, le type (appartement, maison, garage…), la surface et le loyer mensuel de référence.</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>Ajoutez vos locataires</strong>
+        <span>Sur la fiche d'un bien, cliquez sur « + Locataire ». Complétez l'état civil, le montant du loyer, la date d'entrée, et optionnellement l'aide APL reçue.</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>Générez les loyers du mois</strong>
+        <span>Dans la section Loyers, cliquez sur « Générer les loyers ». Oïko crée automatiquement une ligne de suivi pour chaque locataire actif du mois en cours.</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>Configurez l'envoi par email (optionnel)</strong>
+        <span>Dans Paramètres → Email, renseignez votre serveur SMTP pour envoyer quittances et rappels directement depuis Oïko. Cliquez « Tester » pour vérifier la connexion.</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="tip-box green">
+    <div class="tip-label green">Astuce</div>
+    <div class="tip-text">Oïko fonctionne 100% hors-ligne. Toutes vos données sont stockées sur votre ordinateur, dans une base SQLite sécurisée. Aucune donnée n'est transmise à un serveur externe.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Premiers pas</span>
+    <span>Page 3 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 4 — TABLEAU DE BORD
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Dashboard</div>
+  <div class="page-title">Tableau de bord</div>
+  <div class="page-subtitle">La vue centrale de votre patrimoine : indicateurs clés, loyers du mois et accès rapides.</div>
+
+  <div class="three-col">
+    <div class="mini-card">
+      <div class="mini-card-label">Revenus du mois</div>
+      <div class="mini-card-value">Total encaissé</div>
+      <div class="mini-card-desc">Somme des loyers marqués « Payé » sur le mois en cours</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-card-label">Taux d'occupation</div>
+      <div class="mini-card-value">Biens loués / Total</div>
+      <div class="mini-card-desc">Pourcentage de biens actuellement occupés par un locataire</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-card-label">Loyers en attente</div>
+      <div class="mini-card-value">Non perçus</div>
+      <div class="mini-card-desc">Montant restant à percevoir sur le mois courant</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Widget « Loyers ce mois »</div>
+    <ul class="feature-list">
+      <li>Liste de tous les locataires du mois avec leur statut de paiement</li>
+      <li>Bouton <strong>Payé</strong> en un clic pour marquer un loyer comme encaissé</li>
+      <li>Barre de progression globale (ex. 3 / 5 loyers perçus)</li>
+      <li>Accès direct aux filtres de la page Loyers</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Bannière de génération automatique</div>
+    <div class="tip-text">Si aucun loyer n'existe pour le mois en cours, Oïko affiche une bannière vous invitant à les générer. Un seul clic suffit pour créer toutes les lignes de suivi mensuel.</div>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-title">Actions rapides</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="chip blue">Loyers</span>
+      <span class="chip green">Import auto</span>
+      <span class="chip purple">Calendrier</span>
+    </div>
+    <div style="font-size:11px;color:#475569;margin-top:8px;">Les trois raccourcis du dashboard mènent directement aux fonctions les plus utilisées : consultation des loyers, import CSV bancaire, et calendrier des échéances.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Tableau de bord</span>
+    <span>Page 4 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 5 — BIENS & LOCATAIRES
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Biens & Locataires</div>
+  <div class="page-title">Gérer votre parc immobilier</div>
+  <div class="page-subtitle">Créez vos biens, ajoutez vos locataires, gérez les baux et consultez l'historique des occupations.</div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-title">Fiche bien</div>
+        <ul class="feature-list">
+          <li>Adresse complète + complément</li>
+          <li>Type : appartement, maison, garage, local…</li>
+          <li>Surface (m²), année de construction</li>
+          <li>Loyer de référence mensuel</li>
+          <li>Statut : occupé / vacant</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:0">
+        <div class="card-title">Barre de stats</div>
+        <ul class="feature-list">
+          <li>Nombre total de biens</li>
+          <li>Biens occupés vs vacants</li>
+          <li>Loyer mensuel cumulé</li>
+          <li>Revenu annuel projeté</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">Fiche locataire</div>
+        <ul class="feature-list">
+          <li>État civil complet (nom, prénom, email, tél.)</li>
+          <li>Montant du loyer + charges</li>
+          <li>Aide APL / AL déduite</li>
+          <li>Dates d'entrée et de sortie</li>
+          <li>Documents joints (contrat, pièce d'identité…)</li>
+          <li>Photos du logement</li>
+          <li>Score de paiement (historique)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Historique d'occupation</div>
+    <div class="tip-text">Quand un locataire quitte le bien, Oïko le passe en « archivé » et conserve son historique complet. Vous pouvez consulter tous les anciens locataires d'un bien depuis l'onglet « Historique ».</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Documents locataires</div>
+    <div class="tip-text" style="font-size:11.5px">Joignez jusqu'à 6 catégories de documents par locataire : contrat de bail, pièce d'identité, justificatif de domicile, avis d'imposition, RIB, et autres. Oïko vous alerte si un document approche de sa date d'expiration.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Biens & Locataires</span>
+    <span>Page 5 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 6 — LOYERS (1/2)
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Loyers</div>
+  <div class="page-title">Suivi des loyers</div>
+  <div class="page-subtitle">Générez, suivez et mettez à jour les paiements de loyers pour chaque locataire chaque mois.</div>
+
+  <div class="card">
+    <div class="card-title">Génération mensuelle</div>
+    <div class="tip-text" style="font-size:11.5px;margin-bottom:8px;">Cliquez sur <strong>« Générer les loyers »</strong> en début de mois. Oïko crée automatiquement une entrée par locataire actif avec le montant configuré sur sa fiche.</div>
+    <div style="font-size:11px;color:var(--gray);">💡 La génération est idempotente : si les loyers du mois existent déjà, aucun doublon n'est créé.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Statuts de paiement</div>
+    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+      <div><span class="chip green">✓ Payé</span><div style="font-size:10px;color:var(--gray);margin-top:3px;">Loyer encaissé</div></div>
+      <div><span class="chip red">✗ Impayé</span><div style="font-size:10px;color:var(--gray);margin-top:3px;">En retard</div></div>
+      <div><span class="chip orange">⏳ En attente</span><div style="font-size:10px;color:var(--gray);margin-top:3px;">Pas encore dû</div></div>
+      <div><span class="chip blue">⚡ Partiel</span><div style="font-size:10px;color:var(--gray);margin-top:3px;">Versement partiel</div></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Score de paiement</div>
+      <div class="tip-text" style="font-size:11px">Chaque locataire dispose d'un score calculé sur les 12 derniers mois :<br><br>
+        <strong>●●● Excellent</strong> (≥ 90 %) — toujours à l'heure<br>
+        <strong>●●○ Moyen</strong> (70–89 %) — quelques retards<br>
+        <strong>●○○ Faible</strong> (&lt; 70 %) — retards fréquents
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Filtres disponibles</div>
+      <ul class="feature-list">
+        <li>Par mois / année</li>
+        <li>Par bien immobilier</li>
+        <li>Par statut (payé, impayé…)</li>
+        <li>Par locataire</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box orange">
+    <div class="tip-label orange">Révision IRL</div>
+    <div class="tip-text">Oïko intègre la révision annuelle selon l'Indice de Référence des Loyers. Dans Loyers → Révision IRL, entrez le nouvel indice pour mettre à jour automatiquement tous les loyers concernés.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Loyers — Suivi des paiements</span>
+    <span>Page 6 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 7 — LOYERS (2/2) — QUITTANCES
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Loyers — Quittances</div>
+  <div class="page-title">Quittances & Rappels</div>
+  <div class="page-subtitle">Générez et envoyez les quittances de loyer par email ou téléchargez-les en PDF.</div>
+
+  <div class="card">
+    <div class="card-title">Quittance individuelle</div>
+    <ul class="feature-list">
+      <li>Cliquez sur l'icône 📄 en face d'un loyer payé</li>
+      <li>Choix : <strong>Envoyer par email</strong> (SMTP requis) ou <strong>Télécharger PDF</strong></li>
+      <li>La quittance inclut : bailleur, locataire, montant, période, signature</li>
+      <li>Numérotation automatique des quittances</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Toutes les quittances d'un coup</div>
+    <div class="tip-text" style="font-size:11.5px">Le bouton <strong>« Toutes les quittances »</strong> génère en un clic tous les PDFs des loyers payés du mois filtré et les enregistre dans un dossier de votre choix.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Avis d'échéance</div>
+    <div class="tip-text" style="font-size:11.5px">Envoyez un <strong>avis d'échéance</strong> en début de mois pour informer le locataire du montant à régler. Différent de la quittance (envoyée après paiement).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Relance automatique</div>
+    <div class="tip-text" style="font-size:11.5px">Configurez une relance automatique pour les loyers impayés. Oïko envoie un email de rappel personnalisé après un nombre de jours paramétrable.</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Prérequis email</div>
+    <div class="tip-text">L'envoi de quittances par email nécessite une configuration SMTP valide dans Paramètres → Email. Fonctionne avec Gmail, Outlook, OVH, et tout serveur SMTP standard.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Loyers — Quittances & Rappels</span>
+    <span>Page 7 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 8 — DOCUMENTS & RELEVÉS
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Documents</div>
+  <div class="page-title">Documents & Relevés</div>
+  <div class="page-subtitle">Centralisez tous vos documents immobiliers et importez vos relevés bancaires pour l'analyse automatique.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Catégories de documents</div>
+      <ul class="feature-list">
+        <li>Contrats de bail</li>
+        <li>Pièces d'identité locataires</li>
+        <li>Diagnostics immobiliers</li>
+        <li>Factures de travaux</li>
+        <li>Assurances propriétaire</li>
+        <li>Relevés de charges</li>
+        <li>Autres documents libres</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Formats acceptés</div>
+      <ul class="feature-list">
+        <li>PDF (quittances, contrats…)</li>
+        <li>Images JPG / PNG</li>
+        <li>CSV bancaires (tous formats)</li>
+        <li>Relevés Crédit Agricole</li>
+        <li>Relevés BNP, LCL, SG…</li>
+        <li>Exports Boursorama</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-title">Import CSV bancaire</div>
+    <div style="font-size:11.5px;color:#334155;line-height:1.6;">
+      Glissez votre relevé CSV dans la zone d'import. Oïko détecte automatiquement le format de votre banque, analyse les transactions et propose un <strong>rapprochement avec vos loyers</strong> en attente.
+    </div>
+  </div>
+
+  <ul class="step-list">
+    <li>
+      <div class="step-num" style="background:var(--green)">1</div>
+      <div class="step-content">
+        <strong>Import du fichier</strong>
+        <span>Glissez le CSV ou cliquez sur la zone d'import. Détection automatique du séparateur (;, virgule, tabulation).</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num" style="background:var(--green)">2</div>
+      <div class="step-content">
+        <strong>Analyse IA</strong>
+        <span>L'IA analyse chaque transaction et recherche des correspondances avec vos loyers impayés (montant + locataire).</span>
+      </div>
+    </li>
+    <li>
+      <div class="step-num" style="background:var(--green)">3</div>
+      <div class="step-content">
+        <strong>Validation</strong>
+        <span>Les correspondances à haute confiance sont marquées automatiquement. Les ambiguïtés vous sont soumises pour confirmation.</span>
+      </div>
+    </li>
+  </ul>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Documents & Relevés</span>
+    <span>Page 8 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 9 — IMPORT AUTO DÉTAIL
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge green">● Import Automatique</div>
+  <div class="page-title">Import auto — Mode détaillé</div>
+  <div class="page-subtitle">Le mode « Import automatique » traite votre relevé bancaire en un seul clic et met à jour vos loyers sans intervention manuelle.</div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">⚡ Mode « Import auto » (recommandé)</div>
+    <div class="tip-text" style="font-size:11.5px;margin-bottom:10px;">Cliquez sur le bouton vert <strong>⚡ Import auto</strong>. Oïko va :</div>
+    <ul class="feature-list">
+      <li>Importer et parser votre CSV automatiquement</li>
+      <li>Rapprocher chaque virement des loyers en attente</li>
+      <li>Marquer « Payé » tous les loyers à haute confiance (≥ 70 pts)</li>
+      <li>Mettre à jour le fichier Excel comptable</li>
+      <li>Créer une notification de résumé</li>
+      <li>Vous montrer les correspondances ambiguës pour validation</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Système de score</div>
+      <table class="data-table">
+        <thead><tr><th>Critère</th><th>Points</th></tr></thead>
+        <tbody>
+          <tr><td>Montant exact</td><td>+50</td></tr>
+          <tr><td>Montant ±5 €</td><td>+35</td></tr>
+          <tr><td>Nom locataire</td><td>+30</td></tr>
+          <tr><td>Prénom locataire</td><td>+20</td></tr>
+          <tr><td>Mention "loyer"</td><td>+15</td></tr>
+          <tr><td>Mois dans libellé</td><td>+10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Niveaux de confiance</div>
+      <div style="margin-top:6px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="chip green">≥ 70 pts</span><span style="font-size:11px">Auto-marqué Payé</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="chip orange">40–69 pts</span><span style="font-size:11px">Validation requise</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="chip red">&lt; 40 pts</span><span style="font-size:11px">Non rapproché</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Banques compatibles</div>
+    <div class="tip-text">Crédit Agricole, BNP Paribas, Société Générale, LCL, CIC, Caisse d'Épargne, Banque Populaire, Boursorama, Hello Bank, Fortuneo, et tout export CSV standard.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Import automatique</span>
+    <span>Page 9 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 10 — TRAVAUX
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge orange">● Travaux</div>
+  <div class="page-title">Suivi des travaux</div>
+  <div class="page-subtitle">Planifiez et suivez toutes les interventions sur vos biens : réparations, entretiens, rénovations.</div>
+
+  <div class="card">
+    <div class="card-title">Créer une fiche travaux</div>
+    <ul class="feature-list">
+      <li><strong>Bien concerné</strong> — sélectionnez le logement impacté</li>
+      <li><strong>Description</strong> — détails de l'intervention</li>
+      <li><strong>Montant</strong> — coût estimé ou réel (en €)</li>
+      <li><strong>Statut</strong> — Planifié, En cours, Terminé, Annulé</li>
+      <li><strong>Date prévue</strong> — pour suivi et alertes</li>
+      <li><strong>Artisan / Prestataire</strong> — contact intervenant</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Statuts des travaux</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+        <div style="display:flex;align-items:center;gap:8px"><span class="chip blue">🔧 Planifié</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="chip orange">🔨 En cours</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="chip green">✓ Terminé</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="chip red">✗ Annulé</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Statistiques rapides</div>
+      <ul class="feature-list">
+        <li>Filtrer par statut (clic sur les chips)</li>
+        <li>Budget total engagé affiché</li>
+        <li>Alerte si date dépassée</li>
+        <li>Vue par bien immobilier</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box orange">
+    <div class="tip-label orange">Comptabilité</div>
+    <div class="tip-text">Les travaux sont automatiquement intégrés dans le récapitulatif fiscal. Les dépenses de travaux sont déductibles selon votre régime d'imposition (réel ou micro-foncier).</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Travaux</span>
+    <span>Page 10 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 11 — CALENDRIER
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Calendrier</div>
+  <div class="page-title">Calendrier des échéances</div>
+  <div class="page-subtitle">Visualisez d'un coup d'œil toutes vos échéances : loyers, travaux, fins de bail, révisions IRL et expirations de documents.</div>
+
+  <div class="card">
+    <div class="card-title">Types d'événements affichés</div>
+    <div class="two-col" style="margin-top:8px;margin-bottom:0">
+      <ul class="feature-list">
+        <li>Loyers dus ce mois</li>
+        <li>Loyers en retard (passés)</li>
+        <li>Travaux planifiés / en cours</li>
+        <li>Fins de bail proches (90 jours)</li>
+      </ul>
+      <ul class="feature-list">
+        <li>Révisions IRL annuelles</li>
+        <li>Expirations de documents</li>
+        <li>Rappels personnalisés</li>
+        <li>Renouvellements d'assurance</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Navigation</div>
+    <ul class="feature-list">
+      <li>Vue mensuelle avec mise en évidence des jours importants</li>
+      <li>Cliquez sur un jour pour voir le détail des événements</li>
+      <li>Navigation par flèches ← → pour changer de mois</li>
+      <li>Les événements urgents (retards, expirations) s'affichent en rouge</li>
+    </ul>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-title">Lecture rapide des indicateurs</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div style="text-align:center">
+        <div class="chip blue" style="margin-bottom:4px">Bleu</div>
+        <div style="font-size:10px;color:var(--gray)">Loyer dû ce mois</div>
+      </div>
+      <div style="text-align:center">
+        <div class="chip red" style="margin-bottom:4px">Rouge</div>
+        <div style="font-size:10px;color:var(--gray)">Retard / urgent</div>
+      </div>
+      <div style="text-align:center">
+        <div class="chip orange" style="margin-bottom:4px">Orange</div>
+        <div style="font-size:10px;color:var(--gray)">Travaux / révision</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Calendrier</span>
+    <span>Page 11 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 12 — RÉCAPITULATIF
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge blue">● Récapitulatif</div>
+  <div class="page-title">Récapitulatif & Analyses</div>
+  <div class="page-subtitle">Graphiques d'évolution, rentabilité par bien, prévisionnel annuel et préparation de la déclaration fiscale.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Graphiques disponibles</div>
+      <ul class="feature-list">
+        <li>Évolution mensuelle des revenus</li>
+        <li>Comparaison recettes / charges</li>
+        <li>Répartition par bien</li>
+        <li>Taux de recouvrement</li>
+        <li>Évolution annuelle (12 mois)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Analyses fiscales</div>
+      <ul class="feature-list">
+        <li>Revenus fonciers bruts</li>
+        <li>Charges déductibles</li>
+        <li>Résultat net imposable</li>
+        <li>Formulaire 2044 pré-rempli</li>
+        <li>Export PDF fiscal</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Gestion des charges déductibles</div>
+    <ul class="feature-list">
+      <li>Taxes foncières, assurances PNO</li>
+      <li>Frais de gestion, honoraires</li>
+      <li>Travaux d'entretien et réparation</li>
+      <li>Intérêts d'emprunt</li>
+      <li>Frais de comptabilité</li>
+    </ul>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Export comptable</div>
+    <div class="tip-text">Le bouton « Export comptable » génère un fichier Excel structuré avec toutes les données de l'année sélectionnée — prêt à être transmis à votre expert-comptable.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Récapitulatif & Analyses</span>
+    <span>Page 12 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 13 — ASSISTANT IA
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge purple">● Assistant IA</div>
+  <div class="page-title">Assistant IA</div>
+  <div class="page-subtitle">Posez des questions en langage naturel sur votre patrimoine. L'IA connaît vos données en temps réel et vous conseille.</div>
+
+  <div class="highlight">
+    <div class="highlight-title">Données connectées</div>
+    <div style="font-size:11.5px;color:#334155">L'assistant a accès à l'ensemble de vos données : biens, locataires, loyers, travaux, finances. Ses réponses sont basées sur votre situation réelle, pas sur des données génériques.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Exemples de questions</div>
+    <ul class="feature-list">
+      <li>« Quel est mon taux de recouvrement ce trimestre ? »</li>
+      <li>« Quels locataires n'ont pas encore payé ce mois ? »</li>
+      <li>« Quel bien me rapporte le plus net de charges ? »</li>
+      <li>« Résume les travaux en cours sur mes biens »</li>
+      <li>« Quelle est la rentabilité nette de mon appartement Lyon ? »</li>
+      <li>« Prépare un récapitulatif pour mon comptable »</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Analyse de documents</div>
+      <div class="tip-text" style="font-size:11px">Joignez un PDF (relevé bancaire, contrat, facture…) à votre message. L'IA extrait et analyse le contenu automatiquement.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Conversations</div>
+      <div class="tip-text" style="font-size:11px">L'historique des conversations est sauvegardé. Renommez, supprimez ou reprenez une conversation précédente à tout moment.</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Modèle IA</div>
+    <div class="tip-text">Oïko utilise Google Gemini. Une clé API est requise dans Paramètres → IA. L'utilisation est facturée selon votre plan Google AI Studio (tier gratuit disponible).</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Assistant IA</span>
+    <span>Page 13 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 14 — NOTIFICATIONS
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge green">● Notifications</div>
+  <div class="page-title">Notifications & Alertes</div>
+  <div class="page-subtitle">Oïko vous informe proactivement des événements importants concernant votre patrimoine.</div>
+
+  <div class="card">
+    <div class="card-title">Types de notifications automatiques</div>
+    <ul class="feature-list">
+      <li><strong>Loyer impayé</strong> — après X jours configurables</li>
+      <li><strong>Fin de bail imminente</strong> — 90, 60, 30 jours avant</li>
+      <li><strong>Document expiré</strong> — alerte sur pièces d'identité, diagnostics…</li>
+      <li><strong>Travaux en retard</strong> — date dépassée sans clôture</li>
+      <li><strong>Import CSV réussi</strong> — résumé du rapprochement</li>
+      <li><strong>Quittance envoyée</strong> — confirmation d'envoi email</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Badge dans la sidebar</div>
+      <div class="tip-text" style="font-size:11px">Un badge rouge affiche le nombre de notifications non lues dans le menu de gauche. Il disparaît quand vous consultez l'écran Notifications.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Gestion</div>
+      <ul class="feature-list">
+        <li>Marquer comme lu</li>
+        <li>Tout supprimer</li>
+        <li>Filtrer par type</li>
+        <li>Horodatage précis</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Alertes configurables</div>
+    <div class="tip-text" style="font-size:11.5px">Dans Paramètres → Alertes, personnalisez les seuils : nombre de jours avant qu'un loyer est considéré en retard, délai d'alerte fin de bail, etc.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Notifications & Alertes</span>
+    <span>Page 14 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 15 — PARAMÈTRES
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge green">● Paramètres</div>
+  <div class="page-title">Paramètres & Configuration</div>
+  <div class="page-subtitle">Configurez votre profil, l'envoi d'emails, et les préférences générales de l'application.</div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-title">Mon profil</div>
+        <ul class="feature-list">
+          <li>Nom du propriétaire / SCI</li>
+          <li>Adresse email principale</li>
+          <li>Téléphone de contact</li>
+          <li>Adresse postale</li>
+          <li>Numéro SIRET (si SCI)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Configuration IA</div>
+        <ul class="feature-list">
+          <li>Clé API Google Gemini</li>
+          <li>Test de connexion</li>
+          <li>Modèle utilisé</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">Configuration Email (SMTP)</div>
+        <ul class="feature-list">
+          <li>Serveur SMTP (host)</li>
+          <li>Port (587 TLS / 465 SSL)</li>
+          <li>Identifiant et mot de passe</li>
+          <li>Email expéditeur</li>
+          <li>Bouton « Tester la connexion »</li>
+        </ul>
+        <div class="divider"></div>
+        <div style="font-size:10.5px;color:var(--gray)">
+          <strong>Gmail :</strong> smtp.gmail.com : 587<br>
+          <strong>Outlook :</strong> smtp.office365.com : 587<br>
+          <strong>OVH :</strong> ssl0.ovh.net : 465
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">Mot de passe application Gmail</div>
+    <div class="tip-text">Si vous utilisez Gmail avec l'authentification à deux facteurs activée, créez un « Mot de passe d'application » dans votre compte Google → Sécurité. Utilisez ce mot de passe dans Oïko, pas votre mot de passe Gmail habituel.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Paramètres & Configuration</span>
+    <span>Page 15 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 16 — SAUVEGARDE
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge green">● Sauvegarde</div>
+  <div class="page-title">Sauvegarde & Restauration</div>
+  <div class="page-subtitle">Protégez vos données avec des sauvegardes régulières. Restaurez en quelques secondes en cas de problème.</div>
+
+  <div class="card">
+    <div class="card-title">Créer une sauvegarde</div>
+    <ul class="step-list">
+      <li>
+        <div class="step-num" style="background:var(--green)">1</div>
+        <div class="step-content">
+          <strong>Allez dans Paramètres → Sauvegarde</strong>
+          <span>Configurez d'abord le dossier de destination (bouton « Choisir le dossier »).</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-num" style="background:var(--green)">2</div>
+        <div class="step-content">
+          <strong>Cliquez sur « Créer une sauvegarde »</strong>
+          <span>Oïko génère un fichier ZIP horodaté contenant la base de données et tous les fichiers joints.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-num" style="background:var(--green)">3</div>
+        <div class="step-content">
+          <strong>Conservation automatique</strong>
+          <span>Les 10 dernières sauvegardes sont conservées. Les plus anciennes sont supprimées automatiquement.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Restauration</div>
+      <div class="tip-text" style="font-size:11px">Sélectionnez un fichier de sauvegarde dans la liste ou importez-en un depuis l'explorateur. Oïko restaure l'état complet de la base et redémarre.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Contenu d'une sauvegarde</div>
+      <ul class="feature-list">
+        <li>Base de données SQLite</li>
+        <li>Photos locataires</li>
+        <li>Documents joints</li>
+        <li>Fichiers Excel</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box orange">
+    <div class="tip-label orange">Bonne pratique</div>
+    <div class="tip-text">Sauvegardez vers un disque externe ou un dossier synchronisé (OneDrive, Google Drive) pour protéger vos données en cas de panne matérielle. Fréquence recommandée : hebdomadaire.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Sauvegarde & Restauration</span>
+    <span>Page 16 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 17 — EXPORT & COMPTABILITÉ
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge orange">● Export</div>
+  <div class="page-title">Export & Comptabilité</div>
+  <div class="page-subtitle">Générez des exports structurés pour votre comptable, votre déclaration fiscale ou votre archivage personnel.</div>
+
+  <div class="card">
+    <div class="card-title">Fichier Excel annuel</div>
+    <ul class="feature-list">
+      <li>Généré automatiquement pour chaque année fiscale</li>
+      <li>Onglets : Loyers, Charges, Travaux, Récapitulatif</li>
+      <li>Mise en forme professionnelle avec totaux automatiques</li>
+      <li>Envoi direct à votre comptable depuis l'interface</li>
+      <li>Modification locale possible (sync bidirectionnelle)</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Formulaire fiscal 2044</div>
+      <div class="tip-text" style="font-size:11px">Oïko pré-remplit le formulaire 2044 (revenus fonciers) avec vos données de l'année. Exportez-le en PDF pour le joindre à votre déclaration.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Export comptable global</div>
+      <div class="tip-text" style="font-size:11px">Un export complet (toutes données de l'année) au format Excel — idéal pour la transmission à un expert-comptable.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Bail de location</div>
+    <ul class="feature-list">
+      <li>Génération PDF d'un bail loi Alur depuis la fiche locataire</li>
+      <li>Pré-rempli avec les données du bien et du locataire</li>
+      <li>Personnalisable avant impression</li>
+    </ul>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">État des lieux</div>
+    <div class="tip-text">Créez et exportez des états des lieux d'entrée et de sortie depuis la section dédiée. Chaque état des lieux est horodaté et exportable en PDF.</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Export & Comptabilité</span>
+    <span>Page 17 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 18 — MULTI-DOSSIERS
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge orange">● Multi-dossiers</div>
+  <div class="page-title">Gestion multi-dossiers</div>
+  <div class="page-subtitle">Gérez plusieurs patrimoines immobiliers dans des dossiers complètement séparés — idéal pour les SCI multiples ou la gestion pour compte de tiers.</div>
+
+  <div class="card">
+    <div class="card-title">Créer un nouveau dossier</div>
+    <ul class="step-list">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Cliquez sur votre nom de dossier en haut de la sidebar</strong>
+          <span>Un sélecteur de dossiers s'affiche avec tous vos profils existants.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Cliquez « + Nouveau dossier »</strong>
+          <span>Donnez un nom (ex. « SCI DURAND », « Patrimoine perso »). Choisissez une couleur identifiante.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Basculez entre dossiers</strong>
+          <span>Cliquez sur un dossier dans la liste pour y accéder. Chaque dossier a sa propre base de données isolée.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Isolation complète</div>
+      <div class="tip-text" style="font-size:11px">Chaque dossier dispose de sa propre base SQLite, ses propres fichiers Excel, ses propres sauvegardes. Aucune donnée ne se mélange.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Corbeille de dossiers</div>
+      <div class="tip-text" style="font-size:11px">Les dossiers supprimés passent en corbeille. Restaurez-les en un clic ou supprimez définitivement avec effacement des données.</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Multi-dossiers</span>
+    <span>Page 18 / 19</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 19 — RACCOURCIS & ASTUCES
+═══════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-badge orange">● Astuces</div>
+  <div class="page-title">Raccourcis & Astuces</div>
+  <div class="page-subtitle">Conseils pour tirer le meilleur parti d'Oïko au quotidien.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Raccourcis clavier</div>
+      <table class="data-table">
+        <tbody>
+          <tr><td><span class="kbd">⌘K</span> ou <span class="kbd">Ctrl+K</span></td><td style="font-size:11px">Recherche globale</td></tr>
+          <tr><td><span class="kbd">Échap</span></td><td style="font-size:11px">Fermer un modal</td></tr>
+          <tr><td><span class="kbd">←</span> <span class="kbd">→</span></td><td style="font-size:11px">Naviguer dans le guide PDF</td></tr>
+          <tr><td><span class="kbd">Enter</span></td><td style="font-size:11px">Confirmer un formulaire</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Recherche globale</div>
+      <div class="tip-text" style="font-size:11px;margin-bottom:8px">Appuyez sur <span class="kbd">⌘K</span> pour chercher instantanément dans :</div>
+      <ul class="feature-list">
+        <li>Noms de locataires</li>
+        <li>Adresses de biens</li>
+        <li>Montants de loyers</li>
+        <li>Pages de l'application</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Top 5 des astuces</div>
+    <ul class="feature-list">
+      <li><strong>Générez les loyers une fois par mois</strong> — Oïko s'occupe du reste (rappels, suivi, quittances)</li>
+      <li><strong>Importez votre relevé CSV</strong> — le rapprochement automatique vous fait gagner 30 min/mois</li>
+      <li><strong>Sauvegardez vers OneDrive / Drive</strong> — protection automatique hors site</li>
+      <li><strong>Utilisez l'IA pour vos bilans</strong> — « résume mon mois de mai » fonctionne vraiment</li>
+      <li><strong>Configurez les alertes</strong> — ne jamais manquer un impayé ou une fin de bail</li>
+    </ul>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-title">Support & Mise à jour</div>
+    <div style="font-size:11.5px;color:#334155;line-height:1.6">
+      Oïko est mis à jour régulièrement avec de nouvelles fonctionnalités. Les mises à jour sont disponibles depuis la page « À propos » dans le menu utilisateur (icône en haut à droite).<br><br>
+      <strong>Données 100% locales</strong> — Vos données ne quittent jamais votre ordinateur.<br>
+      <strong>Chiffrement AES-256</strong> — Les identifiants sensibles sont chiffrés dans la base.<br>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="page-footer-logo">Oïko</span>
+    <span>Raccourcis & Astuces — Fin du guide</span>
+    <span>Page 19 / 19</span>
+  </div>
+</div>
+
+</body>
+</html>
