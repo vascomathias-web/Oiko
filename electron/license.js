@@ -16,7 +16,7 @@ const { app } = require('electron');
 
 // ── Config ───────────────────────────────────────────────────────────────────
 // URL de ton API Vercel de validation (à déployer — voir api/validate-license.js)
-const LICENSE_API_URL = 'https://api-oiko.vercel.app/validate';
+const LICENSE_API_URL = 'https://oikolicense.vercel.app/api/validate';
 
 // Secret local pour signer le cache (protège contre la modification manuelle du fichier)
 // À NE PAS changer entre les versions — sinon tous les clients doivent se réactiver
