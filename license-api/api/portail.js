@@ -288,6 +288,8 @@ function renderPortal(portal) {
       uploadFilename.style.display = 'block';
       uploadFilename.textContent = '📎 ' + file.name + ' (' + (file.size / 1024).toFixed(0) + ' Ko)';
       uploadBtn.style.display = 'block';
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = 'Envoyer le document';
       uploadLabel.style.borderColor = '#6366f1';
       uploadLabel.style.background = 'rgba(99,102,241,0.04)';
     });
